@@ -8,8 +8,10 @@ pygame.init()
 # Set up the initial integer
 integer = 1
 
-# Set up the window
-window = pygame.display.set_mode((1728, 1052))
+
+
+# Set up the window in fullscreen mode
+window = pygame.display.set_mode((1728, 1080), FULLSCREEN)
 
 # Set up the colors
 BLACK = (0, 0, 0)
@@ -72,7 +74,7 @@ def update_display(current_integer, keystrokes, numbers, debug_mode):
     pygame.display.flip()
 
 # Initialize variables for tracking
-keystrokes = []  # To store the most recent 256 keystrokes
+keystrokes = ["a"]  # To store the most recent 256 keystrokes
 numbers = [integer]  # To store the most recent 256 integers
 debug_mode = False  # Debug mode is initially off
 
@@ -103,7 +105,7 @@ def handle_key_press(key):
     elif key == "a":
         if keystrokes[-12:] == ["a","a","a","a","a","a","a","a","a","a","a","a"]:
             if all(num*2 > numbers[-1] for num in numbers[-8:-1]):
-                if numbers[-26] == 412:
+                if numbers[0] != 1:
                     integer **= 1024
                 else:
                     integer *= 1024
@@ -112,8 +114,15 @@ def handle_key_press(key):
         else:
             integer //= 1.25
             integer = int(integer)
-    if "lalallll" in "".join(keystrokes[-12:]):
+    if "lalallll" in "".join(keystrokes[-16:]):
         integer += 32
+    # Check for repeated sequences
+    for length in range(2, 9):
+        if len(keystrokes) >= length * 3:
+            sequence = keystrokes[-length:]
+            if sequence[0] != "a" and keystrokes[-length*2:-length] == sequence and keystrokes[-length*3:-length*2] == sequence:
+                integer = 1
+                break
         
 
 
